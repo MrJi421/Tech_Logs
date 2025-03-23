@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '.././css/HomePage.css';
+import homeImage from '.././img/homepage-1.png'; 
+
 
 const HomePage = () => {
   return (
@@ -15,7 +17,7 @@ const HomePage = () => {
           </Link>
         </div>
         <div className="landing-image">
-          <img src="https://via.placeholder.com/500x300" alt="Hero" />
+          <img src={homeImage} alt="Hero" />
         </div>
       </section>
 
