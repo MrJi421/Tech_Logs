@@ -1,0 +1,236 @@
+/* Global body settings for a dark classic feel */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #131313;
+  color: #e0e0e0;
+}
+
+/* Full-page background with a subtle gradient and fade-in */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  background: linear-gradient(135deg, #2c2c2c, #000000);
+  animation: backgroundFade 2s ease-in-out;
+  padding: 1rem;
+}
+
+/* Container for the two-part layout */
+.login-container {
+  display: flex;
+  max-width: 1600px; /* Adjusted for better responsiveness */
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  transform: scale(1);
+  transition: transform 0.5s ease;
+}
+
+.login-container:hover {
+  transform: scale(1.02);
+}
+
+/* Left side styling: image container with background removed */
+.login-left {
+  flex: 3;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.login-left img:hover {
+  transform: scale(1.05);
+}
+
+/* Right side styling: login form */
+.login-right {
+  flex: 2;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Centered login card with fade-in animation */
+.login-card {
+  width: 100%;
+  color: #fff;
+  text-align: center;
+  animation: fadeInUp 1s ease both;
+}
+
+/* Heading with a classic serif font and hover color transition */
+.login-card h2 {
+  font-family: 'Times New Roman', serif;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  transition: color 0.3s ease;
+}
+
+.login-card h2:hover {
+  color: #5183f4;
+}
+
+/* Form container */
+.login-form {
+  text-align: left;
+  margin-top: 1rem;
+}
+
+/* Form group spacing with fade-in effect */
+.form-group {
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+/* Label styling */
+.login-form label {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  display: block;
+  color: #ddd;
+}
+
+/* Input field styling with a clean dark look and focus scaling */
+.login-form input {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #2c2c2c;
+  color: #fff;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.login-form input:focus {
+  background: #3a3a3a;
+  outline: none;
+  transform: scale(1.02);
+}
+
+/* Assist links (e.g. Forgot Password) with fade-in */
+.assist-links {
+  text-align: right;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 0.8s;
+}
+
+.assist-links .forgot-password {
+  font-size: 0.85rem;
+  color: #5183f4;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.assist-links .forgot-password:hover {
+  text-decoration: underline;
+  color: #4169e1;
+}
+
+/* Login button styling with hover transition and slight move up */
+.btn.login-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: #5183f4;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.4s ease, transform 0.3s ease;
+}
+
+.btn.login-btn:hover {
+  background: #4169e1;
+  transform: translateY(-3px);
+}
+
+/* Extra links for registration with fade-in */
+.extra-links {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 1s;
+}
+
+.extra-links .register-link {
+  color: #5183f4;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.extra-links .register-link:hover {
+  text-decoration: underline;
+  color: #4169e1;
+}
+
+/* Keyframes for fade and slide animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes backgroundFade {
+  from {
+    filter: brightness(0.8);
+  }
+  to {
+    filter: brightness(1);
+  }
+}
+
+/* Responsive layout - stack columns on smaller screens */
+@media screen and (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+  
+  .login-left,
+  .login-right {
+    flex: 1 100%;
+  }
+  
+  .login-left {
+    height: 250px; /* Adjust height as needed for your image */
+  }
+}

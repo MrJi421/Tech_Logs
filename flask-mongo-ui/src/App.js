@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './js_UI/HomePage';
 import ItemManager from './js_UI/ItemManager';
 import NavigationMenu from './js_UI/NavigationMenu';
+import LoginPage from './js_UI/LoginPage';
+import RegisterPage from './js_UI/RegisterPage';
 
 const CreateItem = () => {
     return (
@@ -14,6 +16,7 @@ const CreateItem = () => {
     );
 };
 
+
 function App() {
     return (
         <Router>
@@ -23,7 +26,8 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/items" element={<ItemManager />} />
                     <Route path="/create" element={<CreateItem />} />
-                    {}
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
                 </Routes>
             </div>
         </Router>

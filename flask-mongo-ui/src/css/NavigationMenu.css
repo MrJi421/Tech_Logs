@@ -12,6 +12,8 @@
   z-index: 0;
 }
 
+
+
 .nav-container.dark {
   background: linear-gradient(135deg, #000000, #2c2c2c);
 }
@@ -95,6 +97,8 @@
   transition: background 0.3s ease, transform 0.3s ease, border 0.3s ease;
   border-radius: 50px 25px;
   transition: ease 0.3s;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .btn:hover {

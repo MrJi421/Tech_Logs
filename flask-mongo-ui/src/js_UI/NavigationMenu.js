@@ -17,15 +17,20 @@ const NavigationMenu = () => {
           <Link to="/items" className="nav-link">My Blogs</Link>
         </li>
         <li>
-          <Link to="/about" className="nav-link">About Us</Link>
+          <Link to="/aboutus" className="nav-link">About Us</Link>
         </li>
         <li>
           <Link to="/contact" className="nav-link">Contact Us</Link>
         </li>
       </ul>
       <div className="nav-btns">
-        <button className="btn new-btn">New Blog</button>
-        <button className="btn login-btn">Login</button>
+        
+        <button className="btn new-btn">          
+          <Link to="/newblog" className="btn">New Blog</Link>
+        </button>
+        <button className="btn login-btn">
+        <Link to="/login" className="btn">Login</Link>
+        </button>
         {/* <button className="btn getstart-btn">Get Started</button> */}
       </div>
     </nav>
