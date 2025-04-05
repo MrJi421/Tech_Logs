@@ -7,7 +7,7 @@ const NavigationMenu = () => {
     <nav className="nav-container dark">
       <div className="nav-brand">
         <img src="/logo192.png" alt="Logo" className="nav-logo" />
-        <span className="brand-name">Blogify</span>
+        <span className="brand-name">Tech Logs</span>
       </div>
       <ul className="nav-links">
         <li>
