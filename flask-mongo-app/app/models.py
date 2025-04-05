@@ -22,3 +22,14 @@ class YourModel:
 
     def delete_one(self, query):
         return self.collection.delete_one(query)
+
+class UserModel:
+    def __init__(self):
+        self.collection = db['users']  # Use the "users" collection
+
+    def find_by_credentials(self, username, password):
+        # In a real-world system, you'd use hashed passwords
+        return self.collection.find_one({"username": username, "password": password})
+
+    def insert_user(self, user_data):
+        return self.collection.insert_one(user_data)

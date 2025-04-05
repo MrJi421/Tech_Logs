@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../css/LoginPage.css';
 import loginImage from '.././img/6620122.jpg'; 
-
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Username:', username);
-    console.log('Password:', password);
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/login', { username, password });
+      console.log('Login successful:', response.data);
+      // Redirect to your homepage or dashboard after success
+      navigate('/');
+    } catch (error) {
+      console.error('Login failed:', error.response ? error.response.data : error.message);
+      alert('Invalid credentials');
+    }
   };
 
   return (
