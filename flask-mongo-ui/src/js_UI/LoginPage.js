@@ -1,29 +1,49 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Modal from '../components/Modal';
 import '../css/LoginPage.css';
 import loginImage from '.././img/6620122.jpg'; 
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://127.0.0.1:5000/login', { username, password });
-      console.log('Login successful:', response.data);
-      // Redirect to your homepage or dashboard after success
-      navigate('/');
+
+      // Store user data
+      localStorage.setItem('userId', response.data.user_id);
+      localStorage.setItem('username', response.data.username);
+
+      // Show success modal
+      setModalMessage('Login successful!');
+      setModalType('success');
+      setShowModal(true);
+
+      // Redirect after a short delay
+      setTimeout(() => navigate('/'), 1500);
     } catch (error) {
-      console.error('Login failed:', error.response ? error.response.data : error.message);
-      alert('Invalid credentials');
+      setModalMessage(error.response ? error.response.data : error.message);
+      setModalType('error');
+      setShowModal(true);
     }
   };
 
   return (
     <div className="login-wrapper">
+      <Modal 
+        show={showModal}
+        message={modalMessage}
+        type={modalType}
+        onClose={() => setShowModal(false)}
+      />
       <div className="login-container">
         <div className="login-left">
           <img src={loginImage} alt="Login Visual" />

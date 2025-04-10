@@ -6,6 +6,10 @@ import ItemManager from './js_UI/ItemManager';
 import NavigationMenu from './js_UI/NavigationMenu';
 import LoginPage from './js_UI/LoginPage';
 import RegisterPage from './js_UI/RegisterPage';
+import CompleteProfile from './js_UI/CompleteProfile';
+import ProfileUpdate from './js_UI/ProfileUpdate';
+import ProtectedRoute from './components/ProtectedRoute';
+import Profile from './js_UI/Profile';
 
 const CreateItem = () => {
     return (
@@ -16,6 +20,14 @@ const CreateItem = () => {
     );
 };
 
+const Dashboard = () => {
+    return (
+        <div style={{ padding: '2rem' }}>
+            <h2>Dashboard</h2>
+            <p>Welcome to the dashboard!</p>
+        </div>
+    );
+};
 
 function App() {
     return (
@@ -28,6 +40,17 @@ function App() {
                     <Route path="/create" element={<CreateItem />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/complete-profile" element={<CompleteProfile />} />
+                    <Route path="/update-profile" element={<ProfileUpdate />} />
+                    <Route 
+                        path="/dashboard" 
+                        element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        } 
+                    />
+                    <Route path="/profile" element={<Profile />} />
                 </Routes>
             </div>
         </Router>
