@@ -11,21 +11,16 @@ import ProfileUpdate from './js_UI/ProfileUpdate';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './js_UI/Profile';
 import { AuthProvider } from './context/AuthContext';
+import CreateBlog from './js_UI/CreateBlog';
+import Dashboard from './js_UI/Dashboard';
+import ViewBlog from './js_UI/ViewBlog';
+import EditBlog from './js_UI/EditBlog';
 
 const CreateItem = () => {
     return (
         <div style={{ padding: '2rem' }}>
             <h2>Create New Item</h2>
             <p>Here you can add a new blog item.</p>
-        </div>
-    );
-};
-
-const Dashboard = () => {
-    return (
-        <div style={{ padding: '2rem' }}>
-            <h2>Dashboard</h2>
-            <p>Welcome to the dashboard!</p>
         </div>
     );
 };
@@ -53,6 +48,30 @@ function App() {
                             } 
                         />
                         <Route path="/profile" element={<Profile />} />
+                        <Route 
+                            path="/create-blog" 
+                            element={
+                                <ProtectedRoute>
+                                    <CreateBlog />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/view-blog/:id" 
+                            element={
+                                <ProtectedRoute>
+                                    <ViewBlog />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route 
+                            path="/edit-blog/:id" 
+                            element={
+                                <ProtectedRoute>
+                                    <EditBlog />
+                                </ProtectedRoute>
+                            } 
+                        />
                     </Routes>
                 </div>
             </Router>

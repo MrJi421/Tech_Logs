@@ -28,7 +28,7 @@ const NavigationMenu = () => {
       <div className="nav-btns">
         
         <button className="btn new-btn">          
-          <Link to="/newblog" className="btn">New Blog</Link>
+          <Link to="/create-blog" className="btn">New Blog</Link>
         </button>
         <button className="btn login1-btn">
           <Link to="/login" className="btn">Login</Link>

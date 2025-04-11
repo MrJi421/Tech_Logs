@@ -10,6 +10,8 @@ from bson import ObjectId
 from app.models import YourModel, UserModel  # Make sure these are imported correctly
 from app import app
 from app import db  # Assuming you have MongoDB connection in __init__.py
+import os
+from werkzeug.utils import secure_filename
 
 bp = Blueprint('main', __name__)
 auth_bp = Blueprint('auth', __name__)
@@ -20,6 +22,9 @@ JWT_EXPIRATION = 24 * 60 * 60  # 24 hours in seconds
 
 # Collection
 users = db.users
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def token_required(f):
     @wraps(f)
@@ -241,23 +246,19 @@ def get_profile():
 @bp.route('/get-user-blogs', methods=['GET'])
 @cross_origin()
 def get_user_blogs():
-    user_id = request.headers.get('user-id')
-    
-    if not user_id:
-        return jsonify({"error": "User ID required", "debug": "No user ID in headers"}), 400
-        
     try:
-        # Debug print
-        print(f"Fetching blogs for user: {user_id}")
+        user_id = request.headers.get('user-id')
+        if not user_id:
+            return jsonify({"error": "User ID required"}), 400
+
+        # Find all blogs and sort by creation date (newest first)
+        blogs = list(db.blogs.find({}).sort("created_at", -1))
         
-        # Find blogs
-        blogs = list(db.blogs.find({"user_id": user_id}))
-        
-        # Convert ObjectIds to strings
+        # Convert ObjectIds to strings for JSON serialization
         for blog in blogs:
             blog['_id'] = str(blog['_id'])
-        
-        print(f"Found {len(blogs)} blogs")
+            blog['user_id'] = str(blog['user_id'])
+            blog['isOwner'] = blog['user_id'] == user_id
         
         return jsonify({
             "message": "Blogs fetched successfully",
@@ -266,10 +267,130 @@ def get_user_blogs():
         
     except Exception as e:
         print(f"Error fetching blogs: {str(e)}")
+        return jsonify({"error": "Failed to fetch blogs"}), 500
+
+@bp.route('/create-blog', methods=['POST'])
+@cross_origin()
+def create_blog():
+    if not request.headers.get('user-id'):
+        return jsonify({"error": "User ID required"}), 400
+
+    try:
+        user_id = request.headers.get('user-id')
+        title = request.form.get('title')
+        content = request.form.get('content')
+        
+        if not title or not content:
+            return jsonify({"error": "Title and content are required"}), 400
+
+        blog_data = {
+            "user_id": ObjectId(user_id),
+            "title": title,
+            "content": content,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }
+
+        # Handle image upload with Cloudinary
+        if 'image' in request.files:
+            file = request.files['image']
+            if file:
+                try:
+                    # Upload to Cloudinary
+                    response = cloudinary.uploader.upload(
+                        file,
+                        folder="blog_images",
+                        unique_filename=True,
+                        overwrite=True,
+                        eager=[{
+                            "width": 800,  # Blog image width
+                            "height": 400,  # Blog image height
+                            "crop": "fill",
+                            "gravity": "auto"
+                        }]
+                    )
+                    # Get optimized image URL
+                    blog_data['image_url'] = response['eager'][0]['secure_url']
+                except Exception as e:
+                    print(f"Cloudinary upload error: {str(e)}")
+                    return jsonify({"error": "Failed to upload image"}), 500
+
+        # Insert blog post
+        result = db.blogs.insert_one(blog_data)
+        
+        # Convert ObjectId to string for JSON response
+        blog_data['_id'] = str(result.inserted_id)
+        blog_data['user_id'] = str(blog_data['user_id'])
+
         return jsonify({
-            "error": "Failed to fetch blogs",
-            "debug": str(e)
-        }), 500
+            "message": "Blog created successfully",
+            "blog": blog_data
+        }), 201
+
+    except Exception as e:
+        print(f"Error creating blog: {str(e)}")
+        return jsonify({"error": "Failed to create blog"}), 500
+
+@bp.route('/delete-blog/<blog_id>', methods=['DELETE'])
+@cross_origin()
+def delete_blog(blog_id):
+    try:
+        user_id = request.headers.get('user-id')
+        if not user_id:
+            return jsonify({"error": "User ID required"}), 400
+
+        # Find the blog and verify ownership
+        blog = db.blogs.find_one({
+            "_id": ObjectId(blog_id),
+            "user_id": ObjectId(user_id)
+        })
+
+        if not blog:
+            return jsonify({"error": "Blog not found or unauthorized"}), 404
+
+        # Delete the blog
+        db.blogs.delete_one({"_id": ObjectId(blog_id)})
+
+        # Delete image from Cloudinary if exists
+        if blog.get('image_url'):
+            # Extract public_id from URL
+            public_id = blog['image_url'].split('/')[-1].split('.')[0]
+            cloudinary.uploader.destroy(f"blog_images/{public_id}")
+
+        return jsonify({"message": "Blog deleted successfully"}), 200
+
+    except Exception as e:
+        print(f"Error deleting blog: {str(e)}")
+        return jsonify({"error": "Failed to delete blog"}), 500
+
+@bp.route('/get-blog/<blog_id>', methods=['GET'])
+@cross_origin()
+def get_blog(blog_id):
+    try:
+        user_id = request.headers.get('user-id')
+        if not user_id:
+            return jsonify({"error": "User ID required"}), 400
+
+        # Find the blog
+        blog = db.blogs.find_one({"_id": ObjectId(blog_id)})
+        
+        if not blog:
+            return jsonify({"error": "Blog not found"}), 404
+
+        # Convert ObjectId to string
+        blog['_id'] = str(blog['_id'])
+        blog['user_id'] = str(blog['user_id'])
+        # Add ownership flag
+        blog['isOwner'] = blog['user_id'] == user_id
+
+        return jsonify({
+            "message": "Blog fetched successfully",
+            "blog": blog
+        }), 200
+
+    except Exception as e:
+        print(f"Error fetching blog: {str(e)}")
+        return jsonify({"error": "Failed to fetch blog"}), 500
 
 @bp.route('/debug/routes', methods=['GET'])
 def list_routes():
