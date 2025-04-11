@@ -1,46 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { marked } from 'marked';
+import showdown from 'showdown';
 import '../css/ViewBlog.css';
+import BlogInteractions from '../components/BlogInteractions';
+
+// Initialize showdown converter
+const converter = new showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true,
+    smartIndentationFix: true
+});
 
 const ViewBlog = () => {
     const { id } = useParams();
-    const { user } = useAuth();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchBlog();
-    }, [id]);
-
-    const fetchBlog = async () => {
-        try {
-            const response = await fetch(`http://localhost:5000/get-blog/${id}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'user-id': user._id
+        const fetchBlog = async () => {
+            try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                // Add user-id to headers only if user is logged in
+                if (user) {
+                    headers['user-id'] = user._id;
                 }
-            });
 
-            const data = await response.json();
+                const response = await fetch(`http://localhost:5000/get-blog/${id}`, {
+                    headers
+                });
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch blog');
+                if (!response.ok) throw new Error('Failed to fetch blog');
+                
+                const data = await response.json();
+                setBlog(data.blog);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
+        };
 
-            setBlog(data.blog);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+        fetchBlog();
+    }, [id, user]);
 
     const renderMarkdown = (content) => {
-        return { __html: marked(content) };
+        return { __html: converter.makeHtml(content) };
     };
 
     if (loading) return <div className="loading">Loading blog...</div>;
@@ -92,6 +104,8 @@ const ViewBlog = () => {
                     className="blog-text markdown-content"
                     dangerouslySetInnerHTML={renderMarkdown(blog.content)}
                 />
+
+                <BlogInteractions blog={blog} />
             </article>
         </div>
     );

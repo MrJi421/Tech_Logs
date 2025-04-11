@@ -1,3 +1,13 @@
+/* Add these CSS variables at the top of the file */
+:root {
+    --dark-bg: #000000;
+    --text-color: #ffffff;
+    --primary-color: #3498db;
+    --border-color: #2d2d2d;
+    --danger-color: #e74c3c;
+    --sidebar-width: 250px;
+}
+
 .dashboard-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -12,19 +22,19 @@
 }
 
 .create-btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background: #3498db;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
+    margin-top: auto;
+    padding: 0.75rem 1rem;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border: none;
-    cursor: pointer;
-    transition: background 0.2s;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
 .create-btn:hover {
-    background: #2980b9;
+    background-color: #2980b9;
 }
 
 .user-profile {
@@ -34,11 +44,12 @@
 }
 
 .profile-image {
-    width: 120px;
-    height: 120px;
+    width: 80px; /* Reduced from 100px */
+    height: 80px; /* Reduced from 100px */
     border-radius: 50%;
+    margin: 0 auto 0.75rem;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background: var(--primary-color);
 }
 
 .profile-image img {
@@ -50,18 +61,29 @@
 .profile-placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, #007bff, #00bcd4);
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-size: 2rem;
+    color: white;
 }
 
 .user-info h2 {
     margin: 0 0 0.5rem;
     color: #2c3e50;
+}
+
+.user-info h3 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.user-info p {
+    margin: 0.5rem 0 0;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.9rem;
 }
 
 .user-email {
@@ -95,21 +117,55 @@
 
 .dashboard-layout {
     display: flex;
-    min-height: 100vh;
-    background: #f5f6fa;
+    min-height: calc(100vh - 64px);
 }
 
+/* Update sidebar styles */
 .sidebar {
-    width: 280px;
-    background: #2c3e50;
-    color: white;
+    width: var(--sidebar-width);
+    background: var(--dark-bg);
+    padding: 2rem 1rem;
+    border-right: 1px solid var(--border-color);
+    position: fixed;
+    top: 64px;
+    left: 0;
+    bottom: 0;
     transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden; /* Changed from overflow-y: auto */
 }
 
-.sidebar.collapsed {
-    width: 80px;
+.sidebar.closed {
+    width: 60px;
+}
+
+.sidebar.closed .sidebar-btn span,
+.sidebar.closed .user-info,
+.sidebar.closed .profile-image {
+    display: none;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 1rem;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.user-profile-section {
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
 }
 
 .sidebar-header {
@@ -120,86 +176,57 @@
     justify-content: space-between;
 }
 
-.user-info {
+.sidebar-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.sidebar-btn {
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.user-details {
-    overflow: hidden;
-}
-
-.user-details h3 {
-    margin: 0;
-    font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.user-details small {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.8rem;
-}
-
-.toggle-nav {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 8px;
-}
-
-.nav-section {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.nav-section h4 {
-    margin: 0 0 1rem;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: rgba(255,255,255,0.5);
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
-    color: white;
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
     text-decoration: none;
     border: none;
     background: none;
+    cursor: pointer;
     width: 100%;
     text-align: left;
-    cursor: pointer;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s;
 }
 
-.nav-item:hover {
+.sidebar-btn:hover,
+.sidebar-btn.active {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.nav-item.active {
-    background: #3498db;
+.sidebar-btn::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
 }
 
-.nav-item i {
-    width: 20px;
-    text-align: center;
+.sidebar-btn:hover::after,
+.sidebar-btn.active::after {
+    width: 100%;
+}
+
+.sidebar.collapsed {
+    width: 80px;
 }
 
 .sidebar.collapsed .nav-item span,
@@ -224,9 +251,15 @@
 
 .main-content {
     flex: 1;
+    margin-left: var(--sidebar-width);
     padding: 2rem;
     overflow-y: auto;
     background: #f5f6fa;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar.closed + .main-content {
+    margin-left: 60px;
 }
 
 .blogs-container {
@@ -333,22 +366,36 @@
     transition: ease 0.3s;
     text-decoration: none;
     font-weight: bold;
-  }
-  
-  .btn:hover {
+    position: relative;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.btn:hover {
     transform: translateY(-2px);
     color: #ffffff;
-    /* font-weight: bold; */
-  }
-  
-  .new-btn {
+}
+
+.btn:hover::after {
+    width: 100%;
+}
+
+.new-btn {
     border-color: #bb86fc;
-  }
-  
-  .new-btn:hover {
+}
+
+.new-btn:hover {
     background: #bb86fc;
-    /* border-color: #03dac6; */
-  }
+}
 
 .read-btn {
     background: #3498db;
@@ -361,8 +408,18 @@
 }
 
 .delete-btn {
-    background: #e74c3c;
-    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.delete-btn:hover {
+    color: var(--danger-color);
+}
+
+.delete-btn:hover::after {
+    background-color: var(--danger-color);
 }
 
 .loading, .error, .no-blogs {
@@ -384,15 +441,13 @@
 .blogs-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .blogs-table th,
 .blogs-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .blogs-table th {
@@ -404,7 +459,6 @@
 .title-cell {
     display: flex;
     align-items: center;
-    gap: 1rem;
 }
 
 .thumbnail {
@@ -412,6 +466,7 @@
     height: 50px;
     object-fit: cover;
     border-radius: 4px;
+    margin-right: 1rem;
 }
 
 .blog-title, tr > td{
@@ -426,6 +481,31 @@
 .action-buttons {
     display: flex;
     gap: 0.5rem;
+}
+
+.action-buttons .nav-link,
+.new-blog-btn {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    position: relative;
+}
+
+.action-buttons .nav-link::after,
+.new-blog-btn::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.action-buttons .nav-link:hover::after,
+.new-blog-btn:hover::after {
+    width: 100%;
 }
 
 .view-btn,
@@ -450,7 +530,40 @@
     color: white;
 }
 
-.delete-btn {
-    background: #e74c3c;
-    color: white;
+.dashboard-page {
+    padding: 1rem;
+}
+
+.dashboard-tabs {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    background: var(--dark-bg);
+    margin-bottom: 2rem;
+}
+
+.tab-btn {
+    padding: 0.5rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+}
+
+.tab-btn::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.tab-btn:hover::after,
+.tab-btn.active::after {
+    width: 100%;
 }

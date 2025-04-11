@@ -40,14 +40,27 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem('token');
+    };
+
+    const updateUser = (userData) => {
+        setUser(userData);
+    };
+
+    const value = {
+        user,
+        loading,
+        handleLogin,
+        handleLogout,
+        logout,
+        updateUser,
+        isAuthenticated: !!user
+    };
+
     return (
-        <AuthContext.Provider value={{ 
-            user, 
-            loading, 
-            handleLogin, 
-            handleLogout,
-            isAuthenticated: !!user 
-        }}>
+        <AuthContext.Provider value={value}>
             {!loading && children}
         </AuthContext.Provider>
     );

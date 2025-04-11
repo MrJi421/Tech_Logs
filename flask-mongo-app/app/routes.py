@@ -8,6 +8,7 @@ import cloudinary
 import cloudinary.uploader
 from bson import ObjectId
 from app.models import YourModel, UserModel  # Make sure these are imported correctly
+from app.models.contact import Contact
 from app import app
 from app import db  # Assuming you have MongoDB connection in __init__.py
 import os
@@ -254,11 +255,12 @@ def get_user_blogs():
         # Find all blogs and sort by creation date (newest first)
         blogs = list(db.blogs.find({}).sort("created_at", -1))
         
-        # Convert ObjectIds to strings for JSON serialization
+        # Convert ObjectIds to strings and add isOwner flag
         for blog in blogs:
             blog['_id'] = str(blog['_id'])
             blog['user_id'] = str(blog['user_id'])
-            blog['isOwner'] = blog['user_id'] == user_id
+            # Set isOwner to True if the blog belongs to the current user
+            blog['isOwner'] = str(blog['user_id']) == str(user_id)
         
         return jsonify({
             "message": "Blogs fetched successfully",
@@ -367,9 +369,8 @@ def delete_blog(blog_id):
 @cross_origin()
 def get_blog(blog_id):
     try:
+        # Get user_id if available but don't require it
         user_id = request.headers.get('user-id')
-        if not user_id:
-            return jsonify({"error": "User ID required"}), 400
 
         # Find the blog
         blog = db.blogs.find_one({"_id": ObjectId(blog_id)})
@@ -380,8 +381,9 @@ def get_blog(blog_id):
         # Convert ObjectId to string
         blog['_id'] = str(blog['_id'])
         blog['user_id'] = str(blog['user_id'])
-        # Add ownership flag
-        blog['isOwner'] = blog['user_id'] == user_id
+        
+        # Add ownership flag only if user is logged in
+        blog['isOwner'] = user_id and blog['user_id'] == user_id
 
         return jsonify({
             "message": "Blog fetched successfully",
@@ -391,6 +393,97 @@ def get_blog(blog_id):
     except Exception as e:
         print(f"Error fetching blog: {str(e)}")
         return jsonify({"error": "Failed to fetch blog"}), 500
+
+@bp.route('/public-blogs', methods=['GET'])
+@cross_origin()
+def get_public_blogs():
+    try:
+        # Get user_id if available but don't require it
+        user_id = request.headers.get('user-id')
+
+        # Find all blogs and sort by creation date (newest first)
+        blogs = list(db.blogs.find({}).sort("created_at", -1))
+        
+        # Convert ObjectIds to strings and add isOwner flag if user is logged in
+        for blog in blogs:
+            blog['_id'] = str(blog['_id'])
+            blog['user_id'] = str(blog['user_id'])
+            blog['isOwner'] = user_id and str(blog['user_id']) == str(user_id)
+        
+        return jsonify({
+            "message": "Blogs fetched successfully",
+            "blogs": blogs
+        }), 200
+        
+    except Exception as e:
+        print(f"Error fetching blogs: {str(e)}")
+        return jsonify({"error": "Failed to fetch blogs"}), 500
+
+@bp.route('/change-password', methods=['PUT'])
+@cross_origin()
+def change_password():
+    try:
+        user_id = request.headers.get('user-id')
+        if not user_id:
+            return jsonify({"error": "User ID required"}), 400
+
+        data = request.get_json()
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+
+        if not current_password or not new_password:
+            return jsonify({"error": "Both current and new passwords are required"}), 400
+
+        # Find user
+        user = db.users.find_one({"_id": ObjectId(user_id)})
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Verify current password
+        if not check_password_hash(user['password'], current_password):
+            return jsonify({"error": "Current password is incorrect"}), 401
+
+        # Update password
+        hashed_password = generate_password_hash(new_password)
+        db.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"password": hashed_password}}
+        )
+
+        return jsonify({
+            "message": "Password updated successfully"
+        }), 200
+
+    except Exception as e:
+        print(f"Error changing password: {str(e)}")
+        return jsonify({"error": "Failed to change password"}), 500
+
+@bp.route('/search-blogs', methods=['GET'])
+@cross_origin()
+def search_blogs():
+    try:
+        query = request.args.get('q', '')
+        if not query:
+            return jsonify({"blogs": []}), 200
+
+        # Search blogs by title using case-insensitive regex
+        blogs = list(db.blogs.find({
+            "title": {"$regex": query, "$options": "i"}
+        }).sort("created_at", -1))
+
+        # Convert ObjectIds to strings
+        for blog in blogs:
+            blog['_id'] = str(blog['_id'])
+            blog['user_id'] = str(blog['user_id'])
+
+        return jsonify({
+            "message": "Search completed successfully",
+            "blogs": blogs
+        }), 200
+
+    except Exception as e:
+        print(f"Error searching blogs: {str(e)}")
+        return jsonify({"error": "Failed to search blogs"}), 500
 
 @bp.route('/debug/routes', methods=['GET'])
 def list_routes():
@@ -402,6 +495,85 @@ def list_routes():
             "path": str(rule)
         })
     return jsonify(routes)
+
+@bp.route('/blog-interaction/<blog_id>', methods=['POST'])
+@cross_origin()
+def handle_blog_interaction():
+    try:
+        blog_id = request.args.get('blog_id')
+        interaction_type = request.json.get('type')  # 'view' or 'like'
+        user_id = request.headers.get('user-id')
+
+        if interaction_type == 'view':
+            # Increment view count
+            db.blogs.update_one(
+                {"_id": ObjectId(blog_id)},
+                {"$inc": {"views": 1}}
+            )
+        elif interaction_type == 'like':
+            if not user_id:
+                return jsonify({"error": "Authentication required for likes"}), 401
+            
+            # Check if user already liked
+            liked = db.blog_likes.find_one({
+                "blog_id": ObjectId(blog_id),
+                "user_id": ObjectId(user_id)
+            })
+
+            if liked:
+                # Unlike
+                db.blog_likes.delete_one({
+                    "blog_id": ObjectId(blog_id),
+                    "user_id": ObjectId(user_id)
+                })
+                db.blogs.update_one(
+                    {"_id": ObjectId(blog_id)},
+                    {"$inc": {"likes": -1}}
+                )
+            else:
+                # Like
+                db.blog_likes.insert_one({
+                    "blog_id": ObjectId(blog_id),
+                    "user_id": ObjectId(user_id),
+                    "created_at": datetime.utcnow()
+                })
+                db.blogs.update_one(
+                    {"_id": ObjectId(blog_id)},
+                    {"$inc": {"likes": 1}}
+                )
+
+        return jsonify({"message": "Interaction recorded successfully"}), 200
+
+    except Exception as e:
+        print(f"Error handling blog interaction: {str(e)}")
+        return jsonify({"error": "Failed to handle interaction"}), 500
+
+@bp.route('/contact', methods=['POST'])
+@cross_origin()
+def handle_contact():
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'email', 'subject', 'message']
+        if not all(field in data for field in required_fields):
+            return jsonify({"error": "All fields are required"}), 400
+
+        # Create contact entry
+        contact = Contact(db)
+        result = contact.create_contact(data)
+
+        # Optional: Send email notification to admin
+        # send_admin_notification(data)
+
+        return jsonify({
+            "message": "Message sent successfully",
+            "contact_id": str(result.inserted_id)
+        }), 201
+
+    except Exception as e:
+        print(f"Error handling contact form: {str(e)}")
+        return jsonify({"error": "Failed to send message"}), 500
 
 your_model = YourModel()
 

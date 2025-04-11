@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import ReactMarkdown from 'react-markdown';
+import showdown from 'showdown';
 import '../css/EditBlog.css';
+
+// Initialize showdown converter
+const converter = new showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true,
+    smartIndentationFix: true
+});
 
 const EditBlog = () => {
     const { id } = useParams();
@@ -110,6 +119,10 @@ const EditBlog = () => {
         }
     };
 
+    const renderMarkdown = (content) => {
+        return { __html: converter.makeHtml(content) };
+    };
+
     if (loading) return <div className="loading">Loading blog...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
@@ -120,7 +133,7 @@ const EditBlog = () => {
                 <div className="header-actions">
                     <button 
                         type="button"
-                        className="preview-btn"
+                        className="preview-btn btn"
                         onClick={() => setIsPreview(!isPreview)}
                     >
                         {isPreview ? 'Edit' : 'Preview'}
@@ -143,9 +156,10 @@ const EditBlog = () => {
                             <img src={formData.currentImageUrl} alt={formData.title} />
                         </div>
                     )}
-                    <div className="markdown-content">
-                        <ReactMarkdown>{formData.content}</ReactMarkdown>
-                    </div>
+                    <div 
+                        className="markdown-content"
+                        dangerouslySetInnerHTML={renderMarkdown(formData.content)}
+                    />
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="edit-blog-form">

@@ -1,0 +1,66 @@
+.share-buttons {
+    padding: 1.5rem;
+    background: var(--dark-bg);
+    border-radius: 8px;
+}
+
+.share-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.share-header h4 {
+    color: var(--text-color);
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.share-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.share-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.share-icon:hover {
+    transform: translateY(-2px);
+}
+
+.share-icon.twitter {
+    background: #1DA1F2;
+}
+
+.share-icon.facebook {
+    background: #4267B2;
+}
+
+.share-icon.linkedin {
+    background: #0077B5;
+}
+
+.share-icon.copy {
+    background: var(--primary-color);
+    border: none;
+}
