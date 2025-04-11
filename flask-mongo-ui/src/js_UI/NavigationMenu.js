@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '.././css/NavigationMenu.css';
+import logoimg from '.././img/tlogs_logo.jpg'; 
+
 
 const NavigationMenu = () => {
   return (
     <nav className="nav-container dark">
       <div className="nav-brand">
-        <img src="/logo192.png" alt="Logo" className="nav-logo" />
+        <img src={logoimg} alt="Logo" className="nav-logo" />
         <span className="brand-name">Tech Logs</span>
       </div>
       <ul className="nav-links">
@@ -28,8 +30,8 @@ const NavigationMenu = () => {
         <button className="btn new-btn">          
           <Link to="/newblog" className="btn">New Blog</Link>
         </button>
-        <button className="btn login-btn">
-        <Link to="/login" className="btn">Login</Link>
+        <button className="btn login1-btn">
+          <Link to="/login" className="btn">Login</Link>
         </button>
         {/* <button className="btn getstart-btn">Get Started</button> */}
       </div>

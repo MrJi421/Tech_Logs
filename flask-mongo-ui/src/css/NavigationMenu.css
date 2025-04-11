@@ -5,11 +5,11 @@
   padding: 1rem 2rem;
   background-color: #070F2B;
   color: #e0e0e0;
-  box-shadow: 5px 4px 12px rgb(255, 255, 255);
+  /* box-shadow: 5px 4px 12px rgb(255, 255, 255); */
   transition: background 01s ease;
-  border: #fff;
-  border-width: 2px;
-  z-index: 0;
+  /* border: #fff; */
+  /* border-width: 2px; */
+  /* z-index: -1; */
 }
 
 
@@ -24,10 +24,10 @@
 }
 
 .nav-logo {
-  width: 40px;
-  height: 40px;
+  width: 30%;
+  height: 30%;
   margin-right: 0.75rem;
-  animation: spin 4s linear infinite;
+  /* animation: spin 4s linear infinite; */
 }
 
 @keyframes spin {
@@ -116,11 +116,11 @@
   /* border-color: #03dac6; */
 }
 
-.login-btn {
+.login1-btn {
   border-color: #03a9f4;
 }
 
-.login-btn:hover {
+.login1-btn:hover {
   background: #03a9f4;
   border-color: #03a9f4;
   color: #ffffff;;

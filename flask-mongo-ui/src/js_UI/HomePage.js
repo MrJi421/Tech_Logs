@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '.././css/HomePage.css';
 import homeImage from '.././img/homepage-1.png'; 
+import logoimg from '.././img/tlogs_logo.jpg'; 
+
 
 
 const HomePage = () => {
@@ -10,7 +12,7 @@ const HomePage = () => {
       {/* Landing Section */}
       <section className="landing-section">
         <div className="landing-content">
-          <h1>Welcome to Blogify</h1>
+          <h1>Welcome to Tech Logs</h1>
           <p>Your one-stop destination for insightful blogs and creative ideas.</p>
           <Link to="/items">
             <button className="btn primary-btn">Explore Blogs</button>
@@ -73,8 +75,8 @@ const HomePage = () => {
       {/* Footer Section */}
       <footer className="footer">
         <div className="footer-logo">
-          <img src="https://via.placeholder.com/50" alt="Logo" />
-          <span>Blogify</span>
+          <img src={logoimg} alt="Logo" />
+          <span>Tech Logs</span>
         </div>
         <div className="footer-links">
           <a href="/">Home</a>
