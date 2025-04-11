@@ -10,6 +10,7 @@ import CompleteProfile from './js_UI/CompleteProfile';
 import ProfileUpdate from './js_UI/ProfileUpdate';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './js_UI/Profile';
+import { AuthProvider } from './context/AuthContext';
 
 const CreateItem = () => {
     return (
@@ -31,29 +32,31 @@ const Dashboard = () => {
 
 function App() {
     return (
-        <Router>
-            <div className="App">
-                <NavigationMenu />
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/items" element={<ItemManager />} />
-                    <Route path="/create" element={<CreateItem />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/complete-profile" element={<CompleteProfile />} />
-                    <Route path="/update-profile" element={<ProfileUpdate />} />
-                    <Route 
-                        path="/dashboard" 
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        } 
-                    />
-                    <Route path="/profile" element={<Profile />} />
-                </Routes>
-            </div>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <div className="App">
+                    <NavigationMenu />
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/items" element={<ItemManager />} />
+                        <Route path="/create" element={<CreateItem />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/complete-profile" element={<CompleteProfile />} />
+                        <Route path="/update-profile" element={<ProfileUpdate />} />
+                        <Route 
+                            path="/dashboard" 
+                            element={
+                                <ProtectedRoute>
+                                    <Dashboard />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route path="/profile" element={<Profile />} />
+                    </Routes>
+                </div>
+            </Router>
+        </AuthProvider>
     );
 }
 

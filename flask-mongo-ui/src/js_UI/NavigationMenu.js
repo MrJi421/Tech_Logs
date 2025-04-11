@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '.././css/NavigationMenu.css';
-import logoimg from '.././img/tlogs_logo.jpg'; 
+import logoimg from '.././img/tlogs_logo.png'; 
 
 
 const NavigationMenu = () => {

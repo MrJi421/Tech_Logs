@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '.././css/HomePage.css';
 import homeImage from '.././img/homepage-1.png'; 
-import logoimg from '.././img/tlogs_logo.jpg'; 
+import logoimg from '.././img/tlogs_logo.png'; 
 
 
 

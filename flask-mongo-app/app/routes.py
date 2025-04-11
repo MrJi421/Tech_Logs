@@ -101,7 +101,7 @@ def register():
 @cross_origin()
 def login():
     data = request.get_json()
-    email = data.get('email')
+    email = data.get('email')  # Change from username to email since registration uses email
     password = data.get('password')
 
     if not email or not password:
@@ -113,11 +113,11 @@ def login():
         
         if user and check_password_hash(user['password'], password):
             # Convert ObjectId to string for JSON serialization
-            user['_id'] = str(user['_id'])
+            user_id = str(user['_id'])
             
             return jsonify({
                 "message": "Login successful",
-                "user_id": user['_id'],
+                "user_id": user_id,
                 "username": user['username']
             }), 200
         
