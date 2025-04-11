@@ -238,6 +238,39 @@ def get_profile():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@bp.route('/get-user-blogs', methods=['GET'])
+@cross_origin()
+def get_user_blogs():
+    user_id = request.headers.get('user-id')
+    
+    if not user_id:
+        return jsonify({"error": "User ID required", "debug": "No user ID in headers"}), 400
+        
+    try:
+        # Debug print
+        print(f"Fetching blogs for user: {user_id}")
+        
+        # Find blogs
+        blogs = list(db.blogs.find({"user_id": user_id}))
+        
+        # Convert ObjectIds to strings
+        for blog in blogs:
+            blog['_id'] = str(blog['_id'])
+        
+        print(f"Found {len(blogs)} blogs")
+        
+        return jsonify({
+            "message": "Blogs fetched successfully",
+            "blogs": blogs
+        }), 200
+        
+    except Exception as e:
+        print(f"Error fetching blogs: {str(e)}")
+        return jsonify({
+            "error": "Failed to fetch blogs",
+            "debug": str(e)
+        }), 500
+
 @bp.route('/debug/routes', methods=['GET'])
 def list_routes():
     routes = []
