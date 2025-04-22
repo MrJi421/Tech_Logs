@@ -1,40 +1,24 @@
-Jenkinsfile
 pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone Repo') {
             steps {
-                echo 'Checking out code...'
-                checkout([ 
-                    $class: 'GitSCM', 
-                    branches: [[name: '*/main']], 
-                    extensions: [], 
-                    userRemoteConfigs: [[ 
-                        url: 'https://github.com/MrJi421/Tech_Logs.git', 
-                        credentialsId: 'techlogs' 
-                    ]] 
-                ])
+                git 'https://github.com/MrJi421/Tech_Logs.git'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building Docker Compose services...'
-                bat 'docker-compose -p todolist1 build'
+                echo "Running build step..."
+                // your build commands here
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
-                echo 'Skipping tests for now...'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application using Docker Compose...'
-                bat 'docker-compose -p todolist1 up -d'
+                echo "Running tests..."
+                // your test commands here
             }
         }
     }
