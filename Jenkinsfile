@@ -20,7 +20,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Docker Compose services...'
-                bat 'docker-compose -p todolist1 build'
+                // bat 'docker-compose -p techlogs build'
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying the application using Docker Compose...'
-                bat 'docker-compose -p todolist1 up -d'
+                // bat 'docker-compose -p techlogs up -d'
             }
         }
     }
