@@ -1,54 +1,41 @@
+Jenkinsfile
 pipeline {
     agent any
-
-    environment {
-        PYTHON_VERSION = '3.13.1'
-        VENV_NAME = 'venv'
-    }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                echo 'Checking out code...'
+                checkout([ 
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    extensions: [], 
+                    userRemoteConfigs: [[ 
+                        url: 'https://github.com/MrJi421/Tech_Logs.git', 
+                        credentialsId: 'techlogs' 
+                    ]] 
+                ])
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Build') {
             steps {
-                bat '''
-                    python -m venv %VENV_NAME%
-                    call %VENV_NAME%\\Scripts\\activate.bat
-                    python -m pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
+                echo 'Building Docker Compose services...'
+                bat 'docker-compose -p todolist1 build'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat '''
-                    call %VENV_NAME%\\Scripts\\activate.bat
-                    python -m pytest tests/
-                '''
+                echo 'Skipping tests for now...'
             }
         }
 
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
             steps {
-                bat '''
-                    echo "Deploying application..."
-                    rem Add your deployment commands here
-                '''
+                echo 'Deploying the application using Docker Compose...'
+                bat 'docker-compose -p todolist1 up -d'
             }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }

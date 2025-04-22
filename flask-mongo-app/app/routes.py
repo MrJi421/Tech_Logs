@@ -27,7 +27,7 @@ JWT_EXPIRATION = 24 * 60 * 60  # 24 hours in seconds
 users = db.users
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS # type: ignore
 
 def token_required(f):
     @wraps(f)
@@ -421,22 +421,32 @@ def get_public_blogs():
         print(f"Error fetching blogs: {str(e)}")
         return jsonify({"error": "Failed to fetch blogs"}), 500
 
-@bp.route('/change-password', methods=['PUT'])
+@bp.route('/change-password', methods=['PUT', 'OPTIONS'])
 @cross_origin()
 def change_password():
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+        
     try:
         user_id = request.headers.get('user-id')
         if not user_id:
             return jsonify({"error": "User ID required"}), 400
+            
+        # Validate ObjectId format
+        if not ObjectId.is_valid(user_id):
+            return jsonify({"error": "Invalid user ID format"}), 400
 
         data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
         current_password = data.get('current_password')
         new_password = data.get('new_password')
 
         if not current_password or not new_password:
             return jsonify({"error": "Both current and new passwords are required"}), 400
 
-        # Find user
+        # Find user with validated ObjectId
         user = db.users.find_one({"_id": ObjectId(user_id)})
         if not user:
             return jsonify({"error": "User not found"}), 404
@@ -447,18 +457,19 @@ def change_password():
 
         # Update password
         hashed_password = generate_password_hash(new_password)
-        db.users.update_one(
+        result = db.users.update_one(
             {"_id": ObjectId(user_id)},
             {"$set": {"password": hashed_password}}
         )
 
-        return jsonify({
-            "message": "Password updated successfully"
-        }), 200
+        if result.modified_count > 0:
+            return jsonify({"message": "Password updated successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to update password"}), 500
 
     except Exception as e:
         print(f"Error changing password: {str(e)}")
-        return jsonify({"error": "Failed to change password"}), 500
+        return jsonify({"error": str(e)}), 500
 
 @bp.route('/search-blogs', methods=['GET'])
 @cross_origin()
