@@ -31,7 +31,7 @@ const LoginPage = () => {
       setShowModal(true);
 
       // Redirect after a short delay
-      setTimeout(() => navigate('/dashboard'), 1500);
+      setTimeout(() => navigate('/dashboard'), 1000);
     } catch (error) {
       setModalMessage(error.response?.data?.error || 'Login failed');
       setModalType('error');
@@ -73,6 +73,7 @@ const LoginPage = () => {
                 <input
                   type="password"
                   id="password"
+                  placeholder="Password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
@@ -83,7 +84,7 @@ const LoginPage = () => {
                   Forgot Password?
                 </Link>
               </div>
-              <button type="submit" className="btn login-btn" disabled={loading}>
+              <button type="submit" className="login-btn" disabled={loading}>
                 {loading ? (
                   <div className="spinner">
                     <div className="bounce1"></div>

@@ -79,15 +79,15 @@ body {
 
 /* Heading with a classic serif font and hover color transition */
 .login-card h2 {
-  font-family: 'Times New Roman', serif;
+  /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
   margin-bottom: 1rem;
   font-size: 2.5rem;
   transition: color 0.3s ease;
 }
 
-.login-card h2:hover {
+/* .login-card h2:hover {
   color: #5183f4;
-}
+} */
 
 /* Form container */
 .login-form {
@@ -101,6 +101,7 @@ body {
   opacity: 0;
   animation: fadeIn 1s ease forwards;
   animation-delay: 0.5s;
+  width: 95%;
 }
 
 /* Label styling */
@@ -117,14 +118,14 @@ body {
   padding: 0.8rem;
   border: none;
   border-radius: 6px;
-  background: #2c2c2c;
+  background: #004bfa;
   color: #fff;
   font-size: 1rem;
   transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .login-form input:focus {
-  background: #3a3a3a;
+  background: #004cff2f;
   outline: none;
   transform: scale(1.02);
 }
@@ -139,8 +140,9 @@ body {
 }
 
 .assist-links .forgot-password {
+  font-weight: bold;
   font-size: 0.85rem;
-  color: #5183f4;
+  color: #004bfa;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -154,7 +156,7 @@ body {
 .btn.login-btn {
   width: 100%;
   padding: 0.9rem;
-  background: #5183f4;
+  background: #004bfa;
   border: none;
   border-radius: 6px;
   font-size: 1rem;
@@ -183,7 +185,7 @@ body {
 }
 
 .extra-links .register-link {
-  color: #5183f4;
+  color: #004bfa;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;

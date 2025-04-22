@@ -6,9 +6,11 @@ import jwt
 from functools import wraps
 import cloudinary
 import cloudinary.uploader
-from bson import ObjectId
-from app.models import YourModel, UserModel  # Make sure these are imported correctly
-from app.models.contact import Contact
+from bson import ObjectId, json_util
+from bson.json_util import dumps
+from models import YourModel, UserModel, BlogInteractionsModel, BlogInteractions  # Make sure these are imported correctly
+# from app.models import BlogInteractionsModel
+# from models.contact import Contact
 from app import app
 from app import db  # Assuming you have MongoDB connection in __init__.py
 import os
@@ -548,32 +550,90 @@ def handle_blog_interaction():
         print(f"Error handling blog interaction: {str(e)}")
         return jsonify({"error": "Failed to handle interaction"}), 500
 
-@bp.route('/contact', methods=['POST'])
+@bp.route('/blog/<blog_id>/like', methods=['GET', 'POST'])
 @cross_origin()
-def handle_contact():
+def handle_like(blog_id):
     try:
-        data = request.get_json()
+        user_id = request.headers.get('user-id')
+        if not user_id:
+            return jsonify({"error": "Authentication required"}), 401
+
+        interactions = BlogInteractions(db)
         
-        # Validate required fields
-        required_fields = ['name', 'email', 'subject', 'message']
-        if not all(field in data for field in required_fields):
-            return jsonify({"error": "All fields are required"}), 400
-
-        # Create contact entry
-        contact = Contact(db)
-        result = contact.create_contact(data)
-
-        # Optional: Send email notification to admin
-        # send_admin_notification(data)
-
-        return jsonify({
-            "message": "Message sent successfully",
-            "contact_id": str(result.inserted_id)
-        }), 201
+        if request.method == 'GET':
+            # Check if user has liked the blog
+            like = interactions.likes_collection.find_one({
+                "blog_id": ObjectId(blog_id),
+                "user_id": ObjectId(user_id)
+            })
+            return jsonify({"is_liked": bool(like)})
+            
+        elif request.method == 'POST':
+            result = interactions.toggle_like(blog_id, user_id)
+            return jsonify(result)
 
     except Exception as e:
-        print(f"Error handling contact form: {str(e)}")
-        return jsonify({"error": "Failed to send message"}), 500
+        print(f"Error handling like: {str(e)}")
+        return jsonify({"error": "Failed to process like"}), 500
+
+@bp.route('/blog/<blog_id>/comments', methods=['GET', 'POST'])
+@cross_origin()
+def handle_comments(blog_id):
+    try:
+        if request.method == 'GET':
+            pipeline = [
+                {"$match": {"blog_id": ObjectId(blog_id)}},
+                {"$lookup": {
+                    "from": "users",
+                    "localField": "user_id",
+                    "foreignField": "_id",
+                    "as": "user"
+                }},
+                {"$unwind": "$user"},
+                {"$project": {
+                    "_id": 1,
+                    "blog_id": 1,
+                    "user_id": 1,
+                    "content": 1,
+                    "created_at": 1,
+                    "username": "$user.username"
+                }}
+            ]
+            comments = list(db.blog_comments.aggregate(pipeline))
+            
+            # Convert ObjectIds to strings
+            for comment in comments:
+                comment['_id'] = str(comment['_id'])
+                comment['blog_id'] = str(comment['blog_id'])
+                comment['user_id'] = str(comment['user_id'])
+                
+            return jsonify({'comments': comments})
+
+        elif request.method == 'POST':
+            user_id = request.headers.get('user-id')
+            if not user_id:
+                return jsonify({"error": "User ID required"}), 401
+
+            data = request.get_json()
+            if not data or 'content' not in data:
+                return jsonify({"error": "Comment content required"}), 400
+
+            comment = {
+                "blog_id": ObjectId(blog_id),
+                "user_id": ObjectId(user_id),
+                "content": data['content'],
+                "created_at": datetime.utcnow()
+            }
+
+            result = db.blog_comments.insert_one(comment)
+            return jsonify({
+                "message": "Comment added successfully",
+                "comment_id": str(result.inserted_id)
+            }), 201
+
+    except Exception as e:
+        print(f"Error handling comments: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 your_model = YourModel()
 

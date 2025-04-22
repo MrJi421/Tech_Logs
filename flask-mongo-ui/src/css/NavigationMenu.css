@@ -67,14 +67,14 @@
   position: absolute;
   width: 0%;
   height: 2px;
-  background: #bb86fc;
+  background: #004bfa;
   bottom: -4px;
   left: 0;
   transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #bb86fc;
+  color: #004bfa;
   /* font-style: italic; */
 }
 
@@ -89,9 +89,9 @@
 
 .btn {
   background: transparent;
-  border: 1px 1px 2px solid #ffffff;
+  border: 1px 1px 2px solid #004bfa;
   padding: 0.5rem 1rem;
-  color: #e0e0e0;
+  /* color: #e0e0e0; */
   font-size: 0.9rem;
   cursor: pointer;
   border-radius: 4px;
@@ -108,17 +108,44 @@
   /* font-weight: bold; */
 }
 
-.new-btn {
-  border-color: #bb86fc;
+.new-btn, .login1-btn {
+  border-color: #004bfa;
+  /* background: #bb86fc; */
+  color: #004bfa; 
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  border-radius: 50px 25px;
+  transition: ease 0.3s;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+
 }
 
-.new-btn:hover {
-  background: #bb86fc;
-  /* border-color: #03dac6; */
+.new-btn:hover, .login1-btn:hover {
+  color: #ffffff;
+  background: #004bfa;
+  border-color: #03dac6;
 }
 
-.login1-btn {
+/* .login1-btn {
   border-color: #03a9f4;
+  color: #03a9f4; 
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  border-radius: 50px 25px;
+  transition: ease 0.3s;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 .login1-btn:hover {
@@ -126,7 +153,7 @@
   border-color: #03a9f4;
   color: #ffffff;;
 
-}
+} */
 
 /* .getstart-btn {
   border-color: #008521;
@@ -153,7 +180,7 @@
     background: #c0392b;
 }
 
-.login-btn {
+/* .login-btn {
     padding: 0.5rem 1rem;
     background: #3498db;
     color: white;
@@ -164,7 +191,7 @@
 
 .login-btn:hover {
     background: #2980b9;
-}
+} */
 
 /* Add these styles to your existing NavigationMenu.css */
 .search-form {
@@ -181,7 +208,7 @@
 }
 
 .search-input {
-    flex: 1;
+    flex: 9;
     padding: 0.5rem 1rem;
     border: none;
     background: transparent;
@@ -193,21 +220,23 @@
     color: rgba(255, 255, 255, 0.6);
 }
 
-.search-input:focus {
+.search-container:focus, .search-input:focus {
     outline: none;
+    /* background-color: #004bfa2f; */
 }
 
 .search-btn {
     padding: 0.5rem 1rem;
     background: transparent;
     border: none;
-    color: var(--text-color);
+    color: #004bfa;
     cursor: pointer;
     transition: color 0.3s ease;
+    flex: 1;
 }
 
 .search-btn:hover {
-    color: var(--primary-color);
+    color: #ffffff;
 }
 
 @media (max-width: 768px) {
