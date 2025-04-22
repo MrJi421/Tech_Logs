@@ -56,15 +56,15 @@ body {
 }
 
 .register-card h2 {
-  font-family: 'Times New Roman', serif;
+  /* font-family: 'Times New Roman', serif; */
   margin-bottom: 1rem;
   font-size: 2.5rem;
   transition: color 0.3s ease;
 }
 
-.register-card h2:hover {
+/* .register-card h2:hover {
   color: #5183f4;
-}
+} */
 
 /* Form styling */
 .register-form {
@@ -98,16 +98,16 @@ body {
 }
 
 .register-form input:focus {
-  background: #3a3a3a;
+  background: #004bfa28;
   outline: none;
   transform: scale(1.02);
 }
 
 /* Registration button styling */
-.btn.register-btn {
+.register-btn {
   width: 100%;
   padding: 0.9rem;
-  background: #5183f4;
+  /* background: #004bfa; */
   border: none;
   border-radius: 6px;
   font-size: 1rem;
@@ -116,9 +116,9 @@ body {
   transition: background 0.4s ease, transform 0.3s ease;
 }
 
-.btn.register-btn:hover {
-  background: #4169e1;
-  transform: translateY(-3px);
+.register-btn:hover {
+  background: #004bfa;
+  transform: translate(-1px);
 }
 
 /* Extra links styling */
@@ -131,7 +131,7 @@ body {
 }
 
 .extra-links .login-link {
-  color: #5183f4;
+  color: #004bfa;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;

@@ -164,15 +164,15 @@ const Dashboard = () => {
                                         </td>
                                         <td>
                                             <div className="action-buttons">
-                                                <Link to={`/view-blog/${blog._id}`} className="btn">
+                                                <Link to={`/view-blog/${blog._id}`} className="view-btn">
                                                     View
                                                 </Link>
                                                 {String(blog.user_id) === String(user._id) && (
                                                     <>
-                                                        <Link to={`/edit-blog/${blog._id}`} className="btn">
+                                                        <Link to={`/edit-blog/${blog._id}`} className="edit-btn">
                                                             Edit
                                                         </Link>
-                                                        <button onClick={() => handleDeleteBlog(blog._id)} className="btn delete-btn">
+                                                        <button onClick={() => handleDeleteBlog(blog._id)} className="delete-btn">
                                                             Delete
                                                         </button>
                                                     </>

@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import showdown from 'showdown';
 import '../css/ViewBlog.css';
-import BlogInteractions from '../components/BlogInteractions';
+import PostInteractions from '../components/PostInteractions';
+import Comments from '../components/Comments';
 
 // Initialize showdown converter
 const converter = new showdown.Converter({
@@ -105,7 +106,8 @@ const ViewBlog = () => {
                     dangerouslySetInnerHTML={renderMarkdown(blog.content)}
                 />
 
-                <BlogInteractions blog={blog} />
+                <PostInteractions blog={blog} />
+                <Comments blogId={blog._id} />
             </article>
         </div>
     );

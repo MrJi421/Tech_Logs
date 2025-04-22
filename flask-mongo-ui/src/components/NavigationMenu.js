@@ -62,16 +62,16 @@ const NavigationMenu = () => {
         </li>
       </ul>
       <div className="nav-btns">
-        <button className="btn new-btn">          
-          <Link to="/create-blog" className="btn">New Blog</Link>
+        <button className="new-btns">          
+          <Link to="/create-blog" className="new-btn">New Blog</Link>
         </button>
         {user ? (
-          <button className="btn login1-btn" onClick={handleLogout}>
+          <button className="login1-btn" onClick={handleLogout}>
             Logout
           </button>
         ) : (
-          <button className="btn login1-btn">
-            <Link to="/login" className="btn">Login</Link>
+          <button className="login1-btns">
+            <Link to="/login" className="login1-btn">Login</Link>
           </button>
         )}
       </div>

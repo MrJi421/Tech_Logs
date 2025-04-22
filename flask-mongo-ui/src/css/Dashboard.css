@@ -389,7 +389,7 @@
     width: 100%;
 }
 
-.new-btn {
+/* .new-btn {
     border-color: #bb86fc;
 }
 
@@ -412,15 +412,15 @@
     border: none;
     cursor: pointer;
     color: var(--text-color);
-}
+} */
 
-.delete-btn:hover {
+/* .delete-btn:hover {
     color: var(--danger-color);
 }
 
 .delete-btn:hover::after {
     background-color: var(--danger-color);
-}
+} */
 
 .loading, .error, .no-blogs {
     text-align: center;
@@ -511,6 +511,7 @@
 .view-btn,
 .edit-btn,
 .delete-btn {
+    color: #000;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
@@ -518,16 +519,31 @@
     text-decoration: none;
     border: none;
     white-space: nowrap;
+    font-weight: bold;
 }
 
 .view-btn {
     background: #3498db;
-    color: white;
+    /* color: white; */
 }
 
 .edit-btn {
     background: #2ecc71;
-    color: white;
+    color: #000;
+}
+
+.delete-btn {
+    background: #cc2e2e;
+}
+
+.delete-btn:hover {
+    /* color: var(--danger-color); */
+    background: #720101;
+    color: #ffffff;
+}
+
+.delete-btn:hover::after {
+    background-color: var(--danger-color);
 }
 
 .dashboard-page {

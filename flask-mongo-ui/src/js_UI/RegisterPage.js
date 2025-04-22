@@ -72,6 +72,7 @@ const RegisterPage = () => {
                                     type="text"
                                     id="username"
                                     name="username"
+                                    placeholder="Username"
                                     value={formData.username}
                                     onChange={handleChange}
                                     required
@@ -83,6 +84,7 @@ const RegisterPage = () => {
                                     type="email"
                                     id="email"
                                     name="email"
+                                    placeholder="Email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
@@ -94,13 +96,14 @@ const RegisterPage = () => {
                                     type="password"
                                     id="password"
                                     name="password"
+                                    placeholder="Password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
                             {error && <p className="error-message">{error}</p>}
-                            <button type="submit" className="btn register-btn" disabled={loading}>
+                            <button type="submit" className="register-btn" disabled={loading}>
                                 {loading ? 'Registering...' : 'Register'}
                             </button>
                         </form>
